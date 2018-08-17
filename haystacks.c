@@ -69,7 +69,7 @@ void addToList(char *uuid, struct map_list_entry *list) {
 	//}
 }
 
-void loadNeedles(struct _blackboard blackboard, FILE *needlesFile, char *uuidPartBuffer) {
+void loadNeedles(char *lineBuffer, struct map_entry *needles, FILE *needlesFile, char *uuidPartBuffer) {
 	while (fread(lineBuffer, LINE_LENGTH, 1, needlesFile)) {			
 		long num = uuidPartLong(lineBuffer, uuidPartBuffer);
 		
@@ -87,26 +87,10 @@ void loadNeedles(struct _blackboard blackboard, FILE *needlesFile, char *uuidPar
 	free(lineBuffer);
 }
 
-struct _blackboard {
-	struct node *tree;
-	char *lineBuffer;
-} blackboard;
-
-struct node {
-	struct node *leaves;
-};
-
 int main(int argc, char** argv) {	
-	int sizeOfChunks = 1 << 16;
-	
-	blackboard.lineBuffer = malloc(sizeof(char) * LINE_LENGTH);
-	blackboard.tree = malloc(sizeof(struct node) * sizeOfChunks);
-
-	free(blackboard.lineBuffer);
-	free(blackboard.tree);
-	// struct uuid* u = uuid_from_string("10ac8810-663c-4340-be23-7eecdcffc8ae");
-	// printf("%lld,%lld\n", u->msb, u->lsb);
-	// free(u);
+	struct uuid* u = uuid_from_string("10ac8810-663c-4340-be23-7eecdcffc8ae");
+	printf("%lld,%lld\n", u->msb, u->lsb);
+	free(u);
 
 	// map_t mymap;    
 	// mymap = tracker_new();
@@ -126,18 +110,3 @@ int main(int argc, char** argv) {
 	// free(uuidPartBuffer);
 
 }
-
-/*
-
-find a large collection of sparsely populated collection of 128-bit data items
-
-expected needles size: 24-bit -> 16M
-
-idea: array size 65k on first 16-bits
-
-
-split 128-bit into 16-bit segments; arrange into tree.
-
-
-*/
-
