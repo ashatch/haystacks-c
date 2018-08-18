@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-long long hex2int(char ch)
+unsigned long long hex2int(char ch)
 {
     if (ch >= '0' && ch <= '9')
         return ch - '0';

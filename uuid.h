@@ -2,8 +2,8 @@
 #define __UUID_H__
 
 struct uuid {
-  long long msb;
-  long long lsb;
+  unsigned long long msb;
+  unsigned long long lsb;
 };
 
 extern struct uuid* uuid_from_string(char *str);

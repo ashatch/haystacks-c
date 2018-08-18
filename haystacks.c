@@ -33,27 +33,46 @@
 // 	free(buf);
 // }
 
+struct _node {
+	uint16_t index;
+	struct _node *leaves;
+};
+
 struct _blackboard {
-	struct node *tree;
+	struct _node *tree;
 	char *lineBuffer;
 } blackboard;
 
-struct node {
-	struct node *leaves;
-};
+
 
 void loadNeedles(FILE *needlesFile) {
+	unsigned long hitCount = 0L;
+	unsigned long missCount = 0L;
+
 	while (fread(blackboard.lineBuffer, LINE_LENGTH, 1, needlesFile)) {			
 		struct uuid* u = uuid_from_string(blackboard.lineBuffer);
+		uint16_t index = u->msb >> (64-16);
+
+		if (blackboard.tree[index].index != 0) {
+			hitCount++;
+		} else {
+			struct _node *t = malloc(sizeof(struct _node));
+			t->leaves = NULL;
+			t->index = index;
+			blackboard.tree[index] = *t;
+			missCount++;
+		}
+
 		free(u);
 	}	
+	printf("Hit: %lu Miss: %lu\n", hitCount, missCount);
 }
 
 int main(int argc, char** argv) {	
 	int sizeOfChunks = 1 << 16;
 	
 	blackboard.lineBuffer = malloc(sizeof(char) * LINE_LENGTH);
-	blackboard.tree = malloc(sizeof(struct node) * sizeOfChunks);
+	blackboard.tree = calloc(sizeof(struct _node), sizeOfChunks);
 
 	FILE *needlesFile;
 	needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
