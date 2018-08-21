@@ -4,6 +4,7 @@
 #include <string.h>
 #include "uuid.h"
 #include "uuidtracker.h"
+#include "murmur3.h"
 
 #define NEEDLES_FILE_PARAM_INDEX 2
 
@@ -45,42 +46,53 @@ struct _blackboard {
 
 
 
-void loadNeedles(FILE *needlesFile) {
-	unsigned long hitCount = 0L;
-	unsigned long missCount = 0L;
+// void loadNeedles(FILE *needlesFile) {
+// 	unsigned long hitCount = 0L;
+// 	unsigned long missCount = 0L;
 
-	while (fread(blackboard.lineBuffer, LINE_LENGTH, 1, needlesFile)) {			
-		struct uuid* u = uuid_from_string(blackboard.lineBuffer);
-		uint16_t index = u->msb >> (64-16);
+// 	while (fread(blackboard.lineBuffer, LINE_LENGTH, 1, needlesFile)) {			
+// 		struct uuid* u = uuid_from_string(blackboard.lineBuffer);
+// 		uint16_t index = u->msb >> (64-16);
 
-		if (blackboard.tree[index].index != 0) {
-			hitCount++;
-		} else {
-			struct _node *t = malloc(sizeof(struct _node));
-			t->leaves = NULL;
-			t->index = index;
-			blackboard.tree[index] = *t;
-			missCount++;
-		}
+// 		if (blackboard.tree[index].index != 0) {
+// 			hitCount++;
+// 		} else {
+// 			struct _node *t = malloc(sizeof(struct _node));
+// 			t->leaves = NULL;
+// 			t->index = index;
+// 			blackboard.tree[index] = *t;
+// 			missCount++;
+// 		}
 
-		free(u);
-	}	
-	printf("Hit: %lu Miss: %lu\n", hitCount, missCount);
-}
+// 		free(u);
+// 	}	
+// 	printf("Hit: %lu Miss: %lu\n", hitCount, missCount);
+// }
 
 int main(int argc, char** argv) {	
-	int sizeOfChunks = 1 << 16;
-	
-	blackboard.lineBuffer = malloc(sizeof(char) * LINE_LENGTH);
-	blackboard.tree = calloc(sizeof(struct _node), sizeOfChunks);
+	uint32_t hash_seed = 0x0;
 
-	FILE *needlesFile;
-	needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
-	loadNeedles(needlesFile);
+	// struct uuid* u = uuid_from_string("ec3a49ae-927a-407b-a220-e86d1a4f084f");
+	// unsigned char *id = (unsigned char*)"ec3a49ae-927a-407b-a220-e86d1a4f084d";
+
+	// uint32_t msb_hash = murmur3_32(u->msb, 1, hash_seed);
+
+	// printf("hash: %d", msb_hash);
+
+	// free(u);
+
+	// int sizeOfChunks = 1 << 16;
 	
-	fclose(needlesFile);
-	free(blackboard.lineBuffer);
-	free(blackboard.tree);
+	// blackboard.lineBuffer = malloc(sizeof(char) * LINE_LENGTH);
+	// blackboard.tree = calloc(sizeof(struct _node), sizeOfChunks);
+
+	// FILE *needlesFile;
+	// needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
+	// loadNeedles(needlesFile);
+	
+	// fclose(needlesFile);
+	// free(blackboard.lineBuffer);
+	// free(blackboard.tree);
 
 	// //processStdin(needles, uuidPartBuffer);
 }
