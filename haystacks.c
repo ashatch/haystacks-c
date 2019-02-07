@@ -70,16 +70,19 @@ struct _blackboard {
 // }
 
 int main(int argc, char** argv) {	
-	uint32_t hash_seed = 0x0;
+	
+	struct uuid* u = uuid_from_string("1b2a49ae-927b-417b-a220-e86b1a4f0841");
+	const uint8_t *ptr = &u->value[0];
 
-	// struct uuid* u = uuid_from_string("ec3a49ae-927a-407b-a220-e86d1a4f084f");
-	// unsigned char *id = (unsigned char*)"ec3a49ae-927a-407b-a220-e86d1a4f084d";
+  uint32_t hash_seed = 0x0;
+	// unsigned char *id = (unsigned char*) "ec3a49ae-927a-407b-a220-e86d1a4f084f";
+	uint32_t msb_hash = murmur3_32(ptr, 16, hash_seed);
+	printf("hash: %u\n", msb_hash);
 
-	// uint32_t msb_hash = murmur3_32(u->msb, 1, hash_seed);
-
-	// printf("hash: %d", msb_hash);
-
-	// free(u);
+	for (int i = 0; i < 16; i++) {
+		printf("%d\n", ptr[i]);
+	}
+	free(u);
 
 	// int sizeOfChunks = 1 << 16;
 	

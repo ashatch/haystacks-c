@@ -4,7 +4,7 @@
 #include<stdlib.h>
 
 struct uuid {
-  uint32_t value[4];
+  uint8_t value[16];
 };
 
 extern struct uuid* uuid_from_string(char *str);
