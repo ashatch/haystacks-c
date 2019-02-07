@@ -1,15 +1,4 @@
-#
+# haystacks-c
 
-## Raw read speeds
+Using a dictionary from James Aspnes (http://www.cs.yale.edu/homes/aspnes/). See http://www.cs.yale.edu/homes/aspnes/pinewiki/C(2f)HashTables.html
 
-1M: 
-
-    real    0m0.136s
-    user    0m0.120s
-    sys     0m0.015s
-
-10M:
-
-    real    0m1.297s
-    user    0m1.176s
-    sys     0m0.120s
