@@ -23,7 +23,7 @@ void processStdin(Dict *dict) {
       }
 	}
 
-//	free(buf);
+	free(buf);
 }
 
 int main(int argc, char** argv)
