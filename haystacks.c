@@ -5,7 +5,7 @@
 #include "dict.h"
 
 #define NEEDLES_FILE_PARAM_INDEX 1
-#define MAX_LINE_LENGTH 256
+#define MAX_LINE_LENGTH 48
 
 void loadNeedles(FILE *needlesFile, Dict *dict) {
   char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
