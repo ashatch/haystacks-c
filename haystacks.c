@@ -32,16 +32,8 @@ void processStdin(Dict *dict) {
 int main(int argc, char** argv)
 {
     setvbuf(stdin,(char*)NULL,_IOFBF,0);
- 
-    Dict dictionary;
-    dictionary = DictCreate();
-
-    FILE *needlesFile;
-    needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
-    loadNeedles(needlesFile, &dictionary);   
-    // fclose(needlesFile);
-
+    Dict dictionary = DictCreate();
+    FILE *needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
+    loadNeedles(needlesFile, &dictionary);
     processStdin(&dictionary);
-
-    return 0;
 }
