@@ -4,6 +4,33 @@
 
 #include "dict.h"
 
+int fast_compare( const char *ptr0, const char *ptr1, int len ){
+    int fast = len/sizeof(size_t) + 1;
+    int offset = (fast-1)*sizeof(size_t);
+    int current_block = 0;
+    if( len <= sizeof(size_t)){ fast = 0; }
+    size_t *lptr0 = (size_t*)ptr0;
+    size_t *lptr1 = (size_t*)ptr1;
+    while( current_block < fast ){
+        if( (lptr0[current_block] ^ lptr1[current_block] )){
+        int pos;
+        for(pos = current_block*sizeof(size_t); pos < len ; ++pos ){
+        if( (ptr0[pos] ^ ptr1[pos]) || (ptr0[pos] == 0) || (ptr1[pos] == 0) ){
+        return  (int)((unsigned char)ptr0[pos] - (unsigned char)ptr1[pos]);
+              }
+            }
+          }
+        ++current_block;
+    }
+    while( len > offset ){
+        if( (ptr0[offset] ^ ptr1[offset] )){ 
+        return (int)((unsigned char)ptr0[offset] - (unsigned char)ptr1[offset]); 
+          }
+        ++offset;
+    }
+    return 0;
+}
+
 struct elt {
     struct elt *next;
     char *key;
@@ -29,13 +56,9 @@ internalDictCreate(int size)
 
     d = malloc(sizeof(*d));
 
-    assert(d != 0);
-
     d->size = size;
     d->n = 0;
     d->table = malloc(sizeof(struct elt *) * d->size);
-
-    assert(d->table != 0);
 
     for(i = 0; i < d->size; i++) d->table[i] = 0;
 
@@ -69,7 +92,7 @@ DictDestroy(Dict d)
     free(d);
 }
 
-#define MULTIPLIER (97)
+#define MULTIPLIER (512)
 
 static unsigned long
 hash_function(const char *s)
@@ -154,7 +177,7 @@ DictSearch(Dict d, const char *key)
     struct elt *e;
 
     for(e = d->table[hash_function(key) % d->size]; e != 0; e = e->next) {
-        if(!strcmp(e->key, key)) {
+        if(!fast_compare(e->key, key, 1)) {
             /* got it */
             return e->value;
         }
@@ -174,7 +197,7 @@ DictDelete(Dict d, const char *key)
     for(prev = &(d->table[hash_function(key) % d->size]); 
         *prev != 0; 
         prev = &((*prev)->next)) {
-        if(!strcmp((*prev)->key, key)) {
+        if(!fast_compare((*prev)->key, key, 1)) {
             /* got it */
             e = *prev;
             *prev = e->next;
