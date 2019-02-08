@@ -4,7 +4,7 @@
 
 #include "dict.h"
 
-int fast_compare( const char *ptr0, const char *ptr1, int len ){
+static inline int fast_compare( const char *ptr0, const char *ptr1, int len ){
     int fast = len/sizeof(size_t) + 1;
     int offset = (fast-1)*sizeof(size_t);
     int current_block = 0;
@@ -92,7 +92,7 @@ DictDestroy(Dict d)
     free(d);
 }
 
-#define MULTIPLIER (512)
+#define MULTIPLIER (1024)
 
 static inline unsigned long
 hash_function(const char *s)
@@ -109,7 +109,7 @@ hash_function(const char *s)
     return h;
 }
 
-static void
+static inline void
 grow(Dict d)
 {
     Dict d2;            /* new dictionary we'll create */
@@ -119,7 +119,7 @@ grow(Dict d)
 
     d2 = internalDictCreate(d->size * GROWTH_FACTOR);
 
-    for(i = 0; i < d->size; i++) {
+    for(i = 0; i < d->size; ++i) {
         for(e = d->table[i]; e != 0; e = e->next) {
             /* note: this recopies everything */
             /* a more efficient implementation would
@@ -136,7 +136,7 @@ grow(Dict d)
     *d = *d2;
     *d2 = swap;
 
-    DictDestroy(d2);
+    // DictDestroy(d2);
 }
 
 /* insert a new key-value pair into an existing dictionary */
