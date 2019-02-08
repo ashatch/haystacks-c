@@ -4,28 +4,23 @@
 
 #include "dict.h"
 
-
 #define NEEDLES_FILE_PARAM_INDEX 1
-#define UUID_LENGTH 36
-#define NEWLINE_LENGTH 1
-#define LINE_LENGTH (UUID_LENGTH + NEWLINE_LENGTH)
-
+#define MAX_LINE_LENGTH 256
 
 void loadNeedles(FILE *needlesFile, Dict *dict) {
-  char *buf = calloc(sizeof(char), LINE_LENGTH);
-	while (fread(buf, LINE_LENGTH, 1, needlesFile)) {			
+  char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
+	while (fgets(buf, MAX_LINE_LENGTH, needlesFile)) {
     DictInsert(*dict, buf, "");
 	}
 }
 
 void processStdin(Dict *dict) {
-	size_t buflen = LINE_LENGTH;
-	int stdinFilePointer = fileno(stdin);
-	char *buf = calloc(sizeof(char), LINE_LENGTH);
+	size_t buflen = MAX_LINE_LENGTH;
+	char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 
-	while ((read(stdinFilePointer, buf, LINE_LENGTH))) {
+	while (fgets(buf, MAX_LINE_LENGTH, stdin) != NULL) {
       if (DictSearch(*dict, buf) != 0) {
-        fwrite(buf, LINE_LENGTH, 1, stdout);
+        fwrite(buf, MAX_LINE_LENGTH, 1, stdout);
       }
 	}
 
@@ -33,7 +28,7 @@ void processStdin(Dict *dict) {
 }
 
 int main(int argc, char** argv)
-{
+{ 
     Dict dictionary;
     dictionary = DictCreate();
 
