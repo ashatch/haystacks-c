@@ -16,7 +16,7 @@ struct dict {
     struct elt **table;
 };
 
-#define INITIAL_SIZE (1024*1024)
+#define INITIAL_SIZE (256*256)
 #define GROWTH_FACTOR (2)
 #define MAX_LOAD_FACTOR (1)
 
