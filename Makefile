@@ -1,5 +1,5 @@
 CC      = gcc
-CFLAGS  = -g
+CFLAGS  = -g -O3
 RM      = rm -rf
 
 default: all
