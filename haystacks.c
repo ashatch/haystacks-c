@@ -8,14 +8,14 @@
 #define MAX_LINE_LENGTH 256
 
 void loadNeedles(FILE *needlesFile, Dict *dict) {
-  char *buf = malloc(sizeof(char) * MAX_LINE_LENGTH);
+  char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 	while (fgets(buf, MAX_LINE_LENGTH, needlesFile)) {
     DictInsert(*dict, buf, "");
 	}
 }
 
 void processStdin(Dict *dict) {
-	char *buf = malloc(sizeof(char) * MAX_LINE_LENGTH);
+	char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 
 	while (fgets(buf, MAX_LINE_LENGTH, stdin) != NULL) {
       if (DictSearch(*dict, buf) != 0) {
