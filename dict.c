@@ -16,8 +16,8 @@ struct dict {
     struct elt **table;
 };
 
-#define INITIAL_SIZE (256*256)
-#define GROWTH_FACTOR (2)
+#define INITIAL_SIZE (30000)
+#define GROWTH_FACTOR (4)
 #define MAX_LOAD_FACTOR (1)
 
 /* dictionary initialization code used in both DictCreate and grow */

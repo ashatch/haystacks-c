@@ -12,6 +12,8 @@ void loadNeedles(FILE *needlesFile, Dict *dict) {
 	while (fgets(buf, MAX_LINE_LENGTH, needlesFile)) {
     DictInsert(*dict, buf, "");
 	}
+
+  free(buf);
 }
 
 void processStdin(Dict *dict) {
