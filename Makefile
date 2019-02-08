@@ -1,5 +1,5 @@
-CC      = gcc
-CFLAGS  = -g -O3
+CC      = clang
+CFLAGS  = -g -Ofast
 RM      = rm -rf
 
 default: all

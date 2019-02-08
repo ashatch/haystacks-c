@@ -22,6 +22,7 @@ void processStdin(Dict *dict) {
 	while (fgets(buf, MAX_LINE_LENGTH, stdin) != NULL) {
       if (DictSearch(*dict, buf) != 0) {
         fwrite(buf, MAX_LINE_LENGTH, 1, stdout);
+        DictDelete(*dict, buf);
       }
 	}
 
@@ -38,7 +39,7 @@ int main(int argc, char** argv)
     FILE *needlesFile;
     needlesFile = fopen(argv[NEEDLES_FILE_PARAM_INDEX], "r");
     loadNeedles(needlesFile, &dictionary);   
-    fclose(needlesFile);
+    // fclose(needlesFile);
 
     processStdin(&dictionary);
 
