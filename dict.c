@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "dict.h"
 
@@ -42,7 +43,7 @@ struct dict {
     struct elt **table;
 };
 
-#define INITIAL_SIZE (30000)
+#define INITIAL_SIZE (10000)
 #define GROWTH_FACTOR (4)
 #define MAX_LOAD_FACTOR (2)
 
@@ -117,6 +118,7 @@ hash_function(const char *s)
 static inline void
 grow(Dict d)
 {
+    // printf("grow");
     Dict d2;            /* new dictionary we'll create */
     struct dict swap;   /* temporary structure for brain transplant */
     int i;
