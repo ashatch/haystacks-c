@@ -92,6 +92,15 @@ DictDestroy(Dict d)
 
 #define MULTIPLIER (1024)
 
+static inline long long
+long_hash_function(const char *s)
+{
+    long long h = 0;
+    memcpy(&h, s, sizeof(long long));
+
+    return h;
+}
+
 static inline unsigned long
 hash_function(const char *s)
 {
@@ -146,7 +155,7 @@ DictInsert(Dict d, const char *key)
 
     e->key = strdup(key);
 
-    h = hash_function(key) % d->size;
+    h = long_hash_function(key) % d->size;
 
     e->next = d->table[h];
     d->table[h] = e;
@@ -166,7 +175,7 @@ DictSearch(Dict d, const char *key)
 {
     struct elt *e;
 
-    for(e = d->table[hash_function(key) % d->size]; e != 0; e = e->next) {
+    for(e = d->table[long_hash_function(key) % d->size]; e != 0; e = e->next) {
         if(!fast_compare(e->key, key, 1)) {
             /* got it */
             return 1;
@@ -184,7 +193,7 @@ DictDelete(Dict d, const char *key)
     struct elt **prev;          /* what to change when elt is deleted */
     struct elt *e;              /* what to delete */
 
-    for(prev = &(d->table[hash_function(key) % d->size]); 
+    for(prev = &(d->table[long_hash_function(key) % d->size]); 
         *prev != 0; 
         prev = &((*prev)->next)) {
         if(!fast_compare((*prev)->key, key, 1)) {
