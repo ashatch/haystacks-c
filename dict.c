@@ -45,7 +45,7 @@ struct dict {
 
 #define INITIAL_SIZE (30000)
 #define GROWTH_FACTOR (4)
-#define MAX_LOAD_FACTOR (1)
+#define MAX_LOAD_FACTOR (2)
 
 /* dictionary initialization code used in both DictCreate and grow */
 Dict
@@ -98,9 +98,7 @@ static inline unsigned long
 hash_function(const char *s)
 {
     unsigned const char *us;
-    unsigned long h;
-
-    h = 0;
+    unsigned long h = 0;
 
     for(us = (unsigned const char *) s; *us; us++) {
         h = h * MULTIPLIER + *us;
