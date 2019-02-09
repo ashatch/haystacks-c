@@ -157,7 +157,7 @@ DictInsert(Dict d, const char *key)
 
     e->key = strdup(key);
 
-    h = long_hash_function(key) % d->size;
+    h = long_hash_function(key) & (d->size - 1);
 
     e->next = d->table[h];
     d->table[h] = e;
@@ -177,7 +177,7 @@ DictSearch(Dict d, const char *key)
 {
     struct elt *e;
 
-    for(e = d->table[long_hash_function(key) % d->size]; e != 0; e = e->next) {
+    for(e = d->table[long_hash_function(key) & (d->size - 1)]; e != 0; e = e->next) {
         if(!fast_compare(e->key, key, 1)) {
             /* got it */
             return 1;
@@ -195,7 +195,7 @@ DictDelete(Dict d, const char *key)
     struct elt **prev;          /* what to change when elt is deleted */
     struct elt *e;              /* what to delete */
 
-    for(prev = &(d->table[long_hash_function(key) % d->size]); 
+    for(prev = &(d->table[long_hash_function(key) & (d->size - 1)]); 
         *prev != 0; 
         prev = &((*prev)->next)) {
         if(!fast_compare((*prev)->key, key, 1)) {
