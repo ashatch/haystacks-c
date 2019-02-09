@@ -34,7 +34,6 @@ static inline int fast_compare( const char *ptr0, const char *ptr1, int len ){
 struct elt {
     struct elt *next;
     char *key;
-    char *value;
 };
 
 struct dict {
@@ -83,7 +82,6 @@ DictDestroy(Dict d)
             next = e->next;
 
             free(e->key);
-            free(e->value);
             free(e);
         }
     }
@@ -123,7 +121,7 @@ grow(Dict d)
             /* a more efficient implementation would
               * patch out the strdups inside DictInsert
               * to avoid this problem */
-            DictInsert(d2, e->key, e->value);
+            DictInsert(d2, e->key);
         }
     }
 
@@ -139,7 +137,7 @@ grow(Dict d)
 
 /* insert a new key-value pair into an existing dictionary */
 void
-DictInsert(Dict d, const char *key, const char *value)
+DictInsert(Dict d, const char *key)
 {
     struct elt *e;
     unsigned long h;
@@ -147,7 +145,6 @@ DictInsert(Dict d, const char *key, const char *value)
     e = malloc(sizeof(*e));
 
     e->key = strdup(key);
-    e->value = strdup(value);
 
     h = hash_function(key) % d->size;
 
@@ -164,7 +161,7 @@ DictInsert(Dict d, const char *key, const char *value)
 
 /* return the most recently inserted value associated with a key */
 /* or 0 if no matching key is present */
-const char *
+inline const int
 DictSearch(Dict d, const char *key)
 {
     struct elt *e;
@@ -172,7 +169,7 @@ DictSearch(Dict d, const char *key)
     for(e = d->table[hash_function(key) % d->size]; e != 0; e = e->next) {
         if(!fast_compare(e->key, key, 1)) {
             /* got it */
-            return e->value;
+            return 1;
         }
     }
 
@@ -196,7 +193,6 @@ DictDelete(Dict d, const char *key)
             *prev = e->next;
 
             free(e->key);
-            free(e->value);
             free(e);
 
             return;

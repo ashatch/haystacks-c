@@ -10,7 +10,7 @@
 inline void loadNeedles(FILE *needlesFile, Dict *dict) {
   char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 	while (fgets(buf, MAX_LINE_LENGTH, needlesFile)) {
-    DictInsert(*dict, buf, "");
+    DictInsert(*dict, buf);
 	}
 
   free(buf);
