@@ -7,10 +7,10 @@
 #define NEEDLES_FILE_PARAM_INDEX 1
 #define MAX_LINE_LENGTH 48
 
-void loadNeedles(FILE *needlesFile, Dict *dict) {
+inline void loadNeedles(FILE *needlesFile, Dict *dict) {
   char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 	while (fgets(buf, MAX_LINE_LENGTH, needlesFile)) {
-    DictInsert(*dict, buf, "");
+    DictInsert(*dict, buf);
 	}
 
   free(buf);
