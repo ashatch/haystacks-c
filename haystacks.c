@@ -16,7 +16,7 @@ inline void loadNeedles(FILE *needlesFile, Dict *dict) {
   free(buf);
 }
 
-inline void processStdin(Dict *dict) {
+void processStdin(Dict *dict) {
 	char *buf = calloc(sizeof(char), MAX_LINE_LENGTH);
 
 	while (fgets(buf, MAX_LINE_LENGTH, stdin) != NULL) {
